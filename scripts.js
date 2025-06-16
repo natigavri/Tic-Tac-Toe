@@ -22,19 +22,18 @@ const gameboard = (function () {
     return {printBoard, getBoard};  
 })();
 
-
-
-
 const gameController = (function () {
    
     const players = [
         {
             name: "Player-One",
-            sign: "X"
+            sign: "X",
+            moves: 0
         },
         {
             name: "Player-Two",
-            sign: "O"
+            sign: "O",
+            moves: 0
         }
     ];
 
@@ -42,20 +41,73 @@ const gameController = (function () {
 
     const switchTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
+        console.log(`${activePlayer.name} turn!`);
     };
 
     const getTurn = () => activePlayer;
     
-    // const checkWin = 
+    const checkWin = (activePlayer, board) => {
+        // console.log(board[0]);
+        // console.log([`${activePlayer.sign}, ${activePlayer.sign}, ${activePlayer.sign}`])
+        // console.log([activePlayer.sign,activePlayer.sign,activePlayer.sign])
+        const checkRow = () => {
+            if (`${board[0]}` == `${[activePlayer.sign,activePlayer.sign,activePlayer.sign]}` || `${board[1]}` == `${[activePlayer.sign,activePlayer.sign,activePlayer.sign]}` || `${board[2]}` == `${[activePlayer.sign,activePlayer.sign,activePlayer.sign]}`) {
+                console.log("row!");
+                return true;
+            }
+        }
+
+        const checkColumn = () => {
+            if ((`${board[0][0]}` == `${activePlayer.sign}` && `${board[1][0]}` == `${activePlayer.sign}` && `${board[2][0]}` == `${activePlayer.sign}`) || (`${board[0][1]}` == `${activePlayer.sign}` && `${board[1][1]}` == `${activePlayer.sign}` && `${board[2][1]}` == `${activePlayer.sign}`) || (`${board[0][2]}` == `${activePlayer.sign}` && `${board[1][2]}` == `${activePlayer.sign}` && `${board[2][2]}` == `${activePlayer.sign}`)) {
+                console.log("column!");
+                return true;
+            }
+        }
+
+        const checkDiag = () => {
+            if (((`${board[0][0]}` == `${activePlayer.sign}` && `${board[1][1]}` == `${activePlayer.sign}` && `${board[2][2]}` == `${activePlayer.sign}`) || (`${board[0][2]}` == `${activePlayer.sign}` && `${board[1][1]}` == `${activePlayer.sign}` && `${board[2][0]}` == `${activePlayer.sign}`))) {
+                console.log("diagonal!");
+                return true
+            }
+        }
+
+        // if (`${board[0]}` == `${[activePlayer.sign,activePlayer.sign,activePlayer.sign]}`) {
+        //     console.log(board);
+        //     console.log(`${activePlayer.name} wins!`);
+        // }
+        if (checkRow() || checkColumn() || checkDiag()){
+            console.log(board);
+            console.log(`${activePlayer.name} wins!`);
+            return true;
+        }
+
+    }
+
+    const checkDraw = (players, board) => {
+        const moves = players[0].moves;
+        console.log(`moves: ${moves}`);
+        if (moves === 5){
+            console.log(board);
+            console.log("Draw!");
+            return true;
+        }
+    }
 
     const playTurn = (playerChoiceRow, playerChoiceColumn) => {
         const activePlayer = getTurn();
         let board = gameboard.getBoard();
         if (board[playerChoiceRow][playerChoiceColumn] === " "){
+            activePlayer.moves = activePlayer.moves += 1;
             console.log(`${activePlayer.name} choice: [${playerChoiceRow}][${playerChoiceColumn}]`);
             board[playerChoiceRow][playerChoiceColumn] = activePlayer.sign;
             gameboard.printBoard(board);
+            if (checkWin(activePlayer, board)){
+                return;
+            }else if(checkDraw(players, board)) {
+                return;
+            } else {
             switchTurn();
+            }
         }
         else {
             console.log("Invalid move, try another");

@@ -10,8 +10,13 @@ const gameboard = (function () {
         }
     }
     
-    const printBoard = () => console.log(board);
+    const printBoard = (board) => console.log(board);
     const getBoard = () => board;
+    printBoard(board);
+    // board[1][2] = "X";
+    // console.log(board);
+    // board[2][2] = "X";
+    // console.log(board);
 
 
     return {printBoard, getBoard};  
@@ -20,7 +25,7 @@ const gameboard = (function () {
 
 
 
-function gameController() {
+const gameController = (function () {
    
     const players = [
         {
@@ -32,18 +37,32 @@ function gameController() {
             sign: "O"
         }
     ];
-    
+
     let activePlayer = players[0];
 
     const switchTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
     };
-    
-    const playTurn = () => {
 
+    const getTurn = () => activePlayer;
+    
+    // const checkWin = 
+
+    const playTurn = (playerChoiceRow, playerChoiceColumn) => {
+        const activePlayer = getTurn();
+        let board = gameboard.getBoard();
+        if (board[playerChoiceRow][playerChoiceColumn] === " "){
+            console.log(`${activePlayer.name} choice: [${playerChoiceRow}][${playerChoiceColumn}]`);
+            board[playerChoiceRow][playerChoiceColumn] = activePlayer.sign;
+            gameboard.printBoard(board);
+            switchTurn();
+        }
+        else {
+            console.log("Invalid move, try another");
+        }  
     }
-        
-}
+        return {playTurn};
+})();
 
 
 GameController();

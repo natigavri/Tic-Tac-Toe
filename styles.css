@@ -8,6 +8,9 @@ html {
 font-size: 100%; /* Base font size */
 }
 
+ul, ol {
+    list-style: none;
+}
 /* Buttons */
 button {
 font-size: large;
@@ -41,4 +44,64 @@ max-width: 1200px; /* Container max width */
 min-width: 100px;
 margin: 0 auto; /* Center the container */
 padding: 1rem; /* Padding */
+text-align: center;
 }
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    width: 500px;
+    height: 500px;
+    border: 2px solid black;
+    background-color: black;
+    gap: 2px;
+    margin: 0 auto;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+}
+
+.cell {
+    background-color: white;
+    text-align: center;
+    align-content: center;
+    font-size: 50px;
+}
+
+.cell:hover {
+    background-color: rgb(204, 204, 204);
+}
+
+#row1 {
+    grid-row: 1 / 2;
+    grid-column: 1 / 4;
+}
+
+#row2 {
+    grid-row: 2 /3;
+    grid-column: 1 / 4;
+}
+
+#row3 {
+    grid-row: 3 / 4;
+    grid-column: 1 / 4;
+}
+
+/* #cell1 {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+}
+
+#cell2 {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+}
+
+#cell3 {
+    grid-row: 1 / 2;
+    grid-column:  3 / 4;
+} */

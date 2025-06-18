@@ -102,6 +102,7 @@ const gameController = (function () {
             console.log(`${activePlayer.name} choice: [${playerChoiceRow}][${playerChoiceColumn}]`);
             board[playerChoiceRow][playerChoiceColumn] = activePlayer.sign;
             gameboard.printBoard(board);
+            //updateDisplay(1, 5, activePlayer.sign)
             if (checkWin(activePlayer, board)){
                 return (gameOver = true);
             }else if(checkDraw(players, board)) {
@@ -116,13 +117,36 @@ const gameController = (function () {
         }  
     }
     
-    while (!gameOver){
-        let row = parseInt(prompt(`${activePlayer.name} - Row:`));
-        let column = parseInt(prompt(`${activePlayer.name} - Column:`));
-        playTurn(row, column);
-    }
-    return {playTurn};
+    // while (!gameOver){
+    //     let row = parseInt(prompt(`${activePlayer.name} - Row:`));
+    //     let column = parseInt(prompt(`${activePlayer.name} - Column:`));
+    //     playTurn(row, column);
+    // }
+    // return {playTurn};
 })();
 
+const updateDisplay = (function (cellNum, roundNum, player) {
+    const round = document.querySelector('#roundCounter');
+    const turn = document.getElementById("turnTitle");
+    const cell = document.querySelector(cellNum || '#cell5');
 
+    cell.innerHTML = `${player.sign}`;
+    round.innerHTML = round.innerHTML + `${roundNum}`;
+    turn.innerHTML = `${player.name} ` + turn.innerHTML;
+})('#cell6', 6, {
+    name: "Player-Two",
+    sign: "O"
+});
+
+// function updateDisplay (cellNum) {
+//     const round = document.querySelector('#roundCounter');
+//     const turn = document.getElementById("turnTitle");
+//     const cell = document.querySelector(cellNum || '#cell5');
+
+//     cell.innerHTML = "O";
+//     round.innerHTML = '1';
+//     turn.innerHTML = "MAGIC";
+// }
+
+// updateDisplay('#cell6');
 

@@ -23,7 +23,9 @@ const gameboard = (function () {
 })();
 
 const gameController = (function () {
-   
+
+    let gameOver = false;
+   // Players objects
     const players = [
         {
             name: "Player-One",
@@ -39,17 +41,16 @@ const gameController = (function () {
 
     let activePlayer = players[0];
 
+    // Change player turn
     const switchTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
         console.log(`${activePlayer.name} turn!`);
     };
 
     const getTurn = () => activePlayer;
-    
+
+    // Check if there is a winner
     const checkWin = (activePlayer, board) => {
-        // console.log(board[0]);
-        // console.log([`${activePlayer.sign}, ${activePlayer.sign}, ${activePlayer.sign}`])
-        // console.log([activePlayer.sign,activePlayer.sign,activePlayer.sign])
         const checkRow = () => {
             if (`${board[0]}` == `${[activePlayer.sign,activePlayer.sign,activePlayer.sign]}` || `${board[1]}` == `${[activePlayer.sign,activePlayer.sign,activePlayer.sign]}` || `${board[2]}` == `${[activePlayer.sign,activePlayer.sign,activePlayer.sign]}`) {
                 console.log("row!");
@@ -71,18 +72,14 @@ const gameController = (function () {
             }
         }
 
-        // if (`${board[0]}` == `${[activePlayer.sign,activePlayer.sign,activePlayer.sign]}`) {
-        //     console.log(board);
-        //     console.log(`${activePlayer.name} wins!`);
-        // }
         if (checkRow() || checkColumn() || checkDiag()){
             console.log(board);
             console.log(`${activePlayer.name} wins!`);
             return true;
         }
-
     }
 
+    //Check if there is a draw
     const checkDraw = (players, board) => {
         const moves = players[0].moves;
         console.log(`moves: ${moves}`);
@@ -96,43 +93,36 @@ const gameController = (function () {
     const playTurn = (playerChoiceRow, playerChoiceColumn) => {
         const activePlayer = getTurn();
         let board = gameboard.getBoard();
-        if (board[playerChoiceRow][playerChoiceColumn] === " "){
+        if (playerChoiceRow < 0 || playerChoiceRow > 2 || playerChoiceColumn < 0 || playerChoiceColumn > 2){
+            console.log("Invalid move, try another");
+            alert("Invalid move, try another");
+        }
+        else if (board[playerChoiceRow][playerChoiceColumn] === " "){
             activePlayer.moves = activePlayer.moves += 1;
             console.log(`${activePlayer.name} choice: [${playerChoiceRow}][${playerChoiceColumn}]`);
             board[playerChoiceRow][playerChoiceColumn] = activePlayer.sign;
             gameboard.printBoard(board);
             if (checkWin(activePlayer, board)){
-                return;
+                return (gameOver = true);
             }else if(checkDraw(players, board)) {
-                return;
+                return (gameOver = true);
             } else {
             switchTurn();
             }
         }
         else {
             console.log("Invalid move, try another");
+            alert("Invalid move, try another");
         }  
     }
-        return {playTurn};
+    
+    while (!gameOver){
+        let row = parseInt(prompt(`${activePlayer.name} - Row:`));
+        let column = parseInt(prompt(`${activePlayer.name} - Column:`));
+        playTurn(row, column);
+    }
+    return {playTurn};
 })();
 
 
-GameController();
 
-
-//have empty board - 3 X 3.
-//have 2 players - X and O.
-//player 1 take turn.
-//check player 1 choice is viable.
-//update board.
-//check winning status.
-//switch players.
-//player 2 take turn.
-//check player 2 choice is viable.
-//update board.
-//check winning status.
-//repeat.
-//if win or draw - game over and show winner.
-//winning if 3 X or O in series.
-//draw if no possible moves left (both players can have 4 moves, 
-//only one player can have 5 before no more space left on board).

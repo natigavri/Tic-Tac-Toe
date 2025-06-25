@@ -19,12 +19,12 @@ const display = (function () {
         const turn = document.getElementById("turnTitle");
         const cell = document.getElementById(cellID);
         const gameWin = win || false;
-        const gamewDraw = draw || false;
+        const gameDraw = draw || false;
         cell.innerHTML = `${player.sign}`;
         if (player.sign !== " "){
             cell.classList.add(player.sign);
         }
-        if (!gameWin && !gamewDraw){
+        if (!gameWin && !gameDraw){
         // Display turn   
             if (player.name === "Player-One"){
                 turn.innerHTML = "Player-Two turn!";
@@ -34,14 +34,14 @@ const display = (function () {
             }
         }
         // Display win
-        else if (gameWin && !gamewDraw){
+        else if (gameWin && !gameDraw){
             turn.innerHTML = `${player.name} ` + 'wins!';
             turn.setAttribute("class", "winner");
         }
         // Display draw
-        else if (gamewDraw && !gameWin){
+        else if (gameDraw && !gameWin){
             turn.innerHTML = "Draw!";
-            turn.setAttribute("class", "winner");
+            turn.setAttribute("class", "draw");
         }
     }
 
@@ -52,7 +52,7 @@ const display = (function () {
 
     // Fresh gameboard
     let gameDef = {
-        name: "Player-Two",
+        name: "",
         sign: " ",
     }
     updateDisplay('r2c2', gameDef);
@@ -64,6 +64,8 @@ const display = (function () {
 const gameController = (function () {
 
     let gameOver = false;
+    const rowIndex = 1;
+    const colIndex = 3;
    // Players objects
     const players = [
         {
@@ -86,7 +88,7 @@ const gameController = (function () {
         console.log(`${activePlayer.name} turn!`);
     };
 
-    const getTurn = () => activePlayer;
+    // const getTurn = () => activePlayer;
 
     // Check if there is a winner
     const checkWin = (activePlayer, board) => {
@@ -122,23 +124,22 @@ const gameController = (function () {
     }
     //Actual game turn
     const playTurn = (cellID) => {
-        let activePlayer = getTurn();
         let board = gameboard.getBoard();
         let cellChoice = document.getElementById(cellID);
-        let row = cellID[1];
-        let column = cellID[3];
+        let row = cellID[rowIndex];
+        let column = cellID[colIndex];
         // check user chose empty cell
         if (cellChoice.innerHTML === " "){
-            activePlayer.moves = activePlayer.moves += 1;
+            activePlayer.moves += 1;
             board[row][column] = activePlayer.sign;
             // check for winner
             if (checkWin(activePlayer, board)){
                 display.updateDisplay(cellID, activePlayer, true, false);
-                return (gameOver = true);
+                gameOver = true;
             // check for draw
             }else if(checkDraw(players, board)) {
                 display.updateDisplay(cellID, activePlayer, false, true);
-                return (gameOver = true);
+                gameOver = true;
             } else {
                 display.updateDisplay(cellID, activePlayer);
                 // switch player turn

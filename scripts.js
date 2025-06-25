@@ -18,13 +18,13 @@ const display = (function () {
     const updateDisplay = (cellID, player, win, draw) => {
         const turn = document.getElementById("turnTitle");
         const cell = document.getElementById(cellID);
-        const gamwWin = win || false;
+        const gameWin = win || false;
         const gamewDraw = draw || false;
         cell.innerHTML = `${player.sign}`;
         if (player.sign !== " "){
             cell.classList.add(player.sign);
         }
-        if (!gamwWin && !gamewDraw){
+        if (!gameWin && !gamewDraw){
         // Display turn   
             if (player.name === "Player-One"){
                 turn.innerHTML = "Player-Two turn!";
@@ -34,14 +34,14 @@ const display = (function () {
             }
         }
         // Display win
-        else if (gamwWin && !gamewDraw){
+        else if (gameWin && !gamewDraw){
             turn.innerHTML = `${player.name} ` + 'wins!';
             turn.setAttribute("class", "winner");
         }
         // Display draw
-        else if (gamewDraw && !gamwWin){
+        else if (gamewDraw && !gameWin){
             turn.innerHTML = "Draw!";
-            turn.setAttribute("class", "draw");
+            turn.setAttribute("class", "winner");
         }
     }
 

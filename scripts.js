@@ -22,6 +22,76 @@ const gameboard = (function () {
     return {printBoard, getBoard};  
 })();
 
+const display = (function () {
+    const getCellNum = (row, column) => {
+        switch (row) {
+            case 0:
+                if (column == 0){
+                    return '#cell1';
+                }
+                else if (column == 1){
+                    return '#cell2';
+                }
+                else if (column == 2){
+                    return '#cell3';
+                }
+                break;
+            case 1:
+                if (column == 0){
+                    return '#cell4';
+                }
+                else if (column == 1){
+                    return '#cell5';
+                }
+                else if (column == 2){
+                    return '#cell6';
+                }
+                break;
+            case 2:
+                if (column == 0){
+                    return '#cell7';
+                }
+                else if (column == 1){
+                    return '#cell8';
+                }
+                else if (column == 2){
+                    return '#cell9';
+                }
+                break;      
+        }
+    }
+    const updateDisplay = (row, column, roundNum, player, win, draw) => {
+        const round = document.querySelector('#roundCounter');
+        const turn = document.getElementById("turnTitle");
+        const cell = document.querySelector(getCellNum(row, column));
+        const gamwWin = win || false;
+        const gamewDraw = draw || false;
+        if (!gamwWin && !gamewDraw){   
+            cell.innerHTML = `${player.sign}` || " ";
+            round.innerHTML = 'round: ' + `${roundNum}`;
+            turn.innerHTML = `${player.name} ` + 'turn!' || "Player One turn!";
+        }
+        else if (gamwWin && !gamewDraw){
+            cell.innerHTML = `${player.sign}`;
+            round.innerHTML = 'round: ' + `${roundNum}`;
+            turn.innerHTML = `${player.name} ` + 'wins!';
+        }
+        else if (gamewDraw && !gamwWin){
+            cell.innerHTML = `${player.sign}`;
+            round.innerHTML = 'round: ' + `${roundNum}`;
+            turn.innerHTML = "Draw!";
+        }
+    }
+
+    let player = {
+        name: "Player-One",
+        sign: " ",
+        moves: 0
+    }
+    updateDisplay(1,2, 1 , player);
+    return {updateDisplay}
+})();
+
 const gameController = (function () {
 
     let gameOver = false;
@@ -91,52 +161,64 @@ const gameController = (function () {
     }
 
     const playTurn = (playerChoiceRow, playerChoiceColumn) => {
-        const activePlayer = getTurn();
+        let activePlayer = getTurn();
         let board = gameboard.getBoard();
+        // check valid user input
         if (playerChoiceRow < 0 || playerChoiceRow > 2 || playerChoiceColumn < 0 || playerChoiceColumn > 2){
             console.log("Invalid move, try another");
             alert("Invalid move, try another");
         }
-        else if (board[playerChoiceRow][playerChoiceColumn] === " "){
+        else if (board[playerChoiceRow][playerChoiceColumn] === " "){ // check user chose empty cell
             activePlayer.moves = activePlayer.moves += 1;
             console.log(`${activePlayer.name} choice: [${playerChoiceRow}][${playerChoiceColumn}]`);
             board[playerChoiceRow][playerChoiceColumn] = activePlayer.sign;
             gameboard.printBoard(board);
-            //updateDisplay(1, 5, activePlayer.sign)
+            
+            // check for winner
             if (checkWin(activePlayer, board)){
+                display.updateDisplay(playerChoiceRow, playerChoiceColumn, players[0].moves + 1, activePlayer, true, false);
                 return (gameOver = true);
+            // check for draw
             }else if(checkDraw(players, board)) {
+                display.updateDisplay(playerChoiceRow, playerChoiceColumn, players[0].moves + 1, activePlayer, false, true);
                 return (gameOver = true);
             } else {
-            switchTurn();
+            display.updateDisplay(playerChoiceRow, playerChoiceColumn, players[0].moves + 1, activePlayer);
+            // switch player turn
+            switchTurn();  
             }
         }
+        // in case user chose taken cell
         else {
             console.log("Invalid move, try another");
             alert("Invalid move, try another");
         }  
     }
     
-    // while (!gameOver){
-    //     let row = parseInt(prompt(`${activePlayer.name} - Row:`));
-    //     let column = parseInt(prompt(`${activePlayer.name} - Column:`));
-    //     playTurn(row, column);
-    // }
-    // return {playTurn};
+    while (!gameOver){
+        let row = parseInt(prompt(`${activePlayer.name} - Row:`));
+        let column = parseInt(prompt(`${activePlayer.name} - Column:`));
+        playTurn(row, column);
+    }
+    return {playTurn};
 })();
 
-const updateDisplay = (function (cellNum, roundNum, player) {
-    const round = document.querySelector('#roundCounter');
-    const turn = document.getElementById("turnTitle");
-    const cell = document.querySelector(cellNum || '#cell5');
 
-    cell.innerHTML = `${player.sign}`;
-    round.innerHTML = round.innerHTML + `${roundNum}`;
-    turn.innerHTML = `${player.name} ` + turn.innerHTML;
-})('#cell6', 6, {
-    name: "Player-Two",
-    sign: "O"
-});
+// const updateDisplay = (function (cellNum, roundNum, player) {
+//     const round = document.querySelector('#roundCounter');
+//     const turn = document.getElementById("turnTitle");
+//     const cell = document.querySelector(cellNum || '#cell5');
+
+//     cell.innerHTML = `${player.sign}`;
+//     round.innerHTML = round.innerHTML + `${roundNum}`;
+//     turn.innerHTML = `${player.name} ` + turn.innerHTML;
+// })('#cell6', 2, {
+//     name: "Player-Two",
+//     sign: "O"
+// });
+
+
+
 
 // function updateDisplay (cellNum) {
 //     const round = document.querySelector('#roundCounter');

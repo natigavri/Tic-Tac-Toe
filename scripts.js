@@ -16,15 +16,16 @@ const gameboard = (function () {
 
 const display = (function () {
     const updateDisplay = (cellID, player, win, draw) => {
-        // const round = document.querySelector('#roundCounter');
         const turn = document.getElementById("turnTitle");
         const cell = document.getElementById(cellID);
         const gamwWin = win || false;
         const gamewDraw = draw || false;
+        cell.innerHTML = `${player.sign}`;
+        if (player.sign !== " "){
+            cell.classList.add(player.sign);
+        }
         if (!gamwWin && !gamewDraw){
         // Display turn   
-            cell.innerHTML = `${player.sign}`;
-            // round.innerHTML = 'round: ' + `${roundNum}`;
             if (player.name === "Player-One"){
                 turn.innerHTML = "Player-Two turn!";
             }
@@ -34,21 +35,19 @@ const display = (function () {
         }
         // Display win
         else if (gamwWin && !gamewDraw){
-            cell.innerHTML = `${player.sign}`;
-            // round.innerHTML = 'round: ' + `${roundNum}`;
             turn.innerHTML = `${player.name} ` + 'wins!';
+            turn.setAttribute("class", "winner");
         }
         // Display draw
         else if (gamewDraw && !gamwWin){
-            cell.innerHTML = `${player.sign}`;
-            // round.innerHTML = 'round: ' + `${roundNum}`;
             turn.innerHTML = "Draw!";
+            turn.setAttribute("class", "draw");
         }
     }
 
     const updateRound = (roundNum) => {
         const round = document.querySelector('#roundCounter');
-        round.innerHTML = 'round: ' + `${roundNum}`;
+        round.innerHTML = 'Round: ' + `${roundNum}`;
     }
 
     // Fresh gameboard
@@ -152,7 +151,7 @@ const gameController = (function () {
     const grid = document.getElementById("grid");
     grid.addEventListener("click", (e) => {
         while(!gameOver){
-            if(e.target.className === 'cell'){
+            if(e.target.classList.contains("cell")){
                 const cellID = e.target.getAttribute("id");
                 return playTurn(cellID);
             }

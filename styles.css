@@ -105,3 +105,16 @@ text-align: center;
     grid-row: 1 / 2;
     grid-column:  3 / 4;
 } */
+
+.X {
+    background-color: rgb(248, 174, 63);
+}
+
+.O {
+    background-color: rgba(198, 148, 255, 0.589);
+}
+
+.winner, .draw{
+    color: rgb(15, 168, 66);
+}
+
